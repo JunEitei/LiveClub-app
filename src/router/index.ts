@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { setupLayouts } from 'virtual:generated-layouts'
-import GoodsPage from '@/components/GoodsPage.vue'
+import LivePage from '@/components/LivePage.vue'
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', name: 'Goods', component: GoodsPage },
+  { path: '/', name: 'Live', component: LivePage },
 ]
 
 const router = createRouter({

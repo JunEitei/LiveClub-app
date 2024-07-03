@@ -7,14 +7,13 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AddGood: typeof import('./components/AddGood.vue')['default']
+    AddLive: typeof import('./components/AddLive.vue')['default']
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     EventsPage: typeof import('./components/EventsPage.vue')['default']
-    GoodForm: typeof import('./components/GoodForm.vue')['default']
-    GoodList: typeof import('./components/GoodList.vue')['default']
-    GoodsList: typeof import('./components/GoodsList.vue')['default']
-    GoodsPage: typeof import('./components/GoodsPage.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    LiveForm: typeof import('./components/LiveForm.vue')['default']
+    LiveList: typeof import('./components/LiveList.vue')['default']
+    LivePage: typeof import('./components/LivePage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UserList: typeof import('./components/UserList.vue')['default']
