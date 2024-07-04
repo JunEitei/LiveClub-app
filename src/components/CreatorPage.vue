@@ -1,27 +1,41 @@
 <template>
   <v-container>
-    <v-card class="card-container">
+    <v-card class="card-container" @click="openFilePicker">
       <v-form @submit.prevent="createLiveEvent" class="form-container">
-        <v-file-input
-          v-model="userPhoto"
-          label="Upload One Photo"
-          accept="image/*"
-          @change="previewPhoto"
-          required
-          class="dark-grey-text"
-        ></v-file-input>
-        <v-row justify="center">
-          <v-col cols="12">
-            <v-img
-              v-if="photoPreview"
-              :src="photoPreview"
-              alt="Photo Preview"
-              max-width="300"
-              class="my-4"
-            ></v-img>
-          </v-col>
-        </v-row>
+        <div class="upload-container" v-if="!userPhoto">
+          <input
+            ref="fileInput"
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            style="display: none;"
+            @change="onFileSelected"
+          />
+          <v-img
+            v-if="photoPreview"
+            :src="photoPreview"
+            alt="Photo Preview"
+            max-width="300"
+            class="my-4"
+          ></v-img>
+          <div class="upload-overlay">
+            <v-icon class="upload-icon">mdi-camera</v-icon>
+            <div class="upload-text">Click to Upload Your Photo</div>
+          </div>
+          <button
+            type="button"
+            class="invisible-button"
+          ></button>
+        </div>
+        <v-img
+          v-if="userPhoto && photoPreview"
+          :src="photoPreview"
+          alt="Photo Preview"
+          max-width="300"
+          class="my-4"
+        ></v-img>
         <v-btn
+          v-if="userPhoto"
           type="submit"
           :style="{ background: buttonBackground, color: 'white' }"
           class="gradient-button"
@@ -76,22 +90,43 @@ export default defineComponent({
       }
     };
 
-    // Preview photo
-    const previewPhoto = () => {
-      if (userPhoto.value) {
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-          photoPreview.value = e.target?.result as string;
-        };
-        reader.readAsDataURL(userPhoto.value);
+    // Open file picker when card is clicked
+    const openFilePicker = () => {
+      const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.click();
       }
+    };
+
+    // Handle file selected event
+    const onFileSelected = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      if (target.files && target.files.length > 0) {
+        const selectedFile = target.files[0];
+        userPhoto.value = selectedFile;
+        previewPhoto(selectedFile);
+        const uploadContainer = document.querySelector('.upload-container');
+        if (uploadContainer) {
+          uploadContainer.style.display = 'none';
+        }
+      }
+    };
+
+    // Preview photo
+    const previewPhoto = (file: File) => {
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        photoPreview.value = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
     };
 
     return {
       userPhoto,
       photoPreview,
       createLiveEvent,
-      previewPhoto,
+      openFilePicker,
+      onFileSelected,
       buttonBackground,
     };
   },
@@ -110,21 +145,48 @@ export default defineComponent({
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  cursor: pointer; /* 添加光標樣式 */
 }
 
 .form-container {
-  margin-left: 16px; /* 左边外边距 */
-  margin-right: 16px; /* 右边外边距 */
+  margin-left: 16px; /* 左邊外邊距 */
+  margin-right: 16px; /* 右邊外邊距 */
 }
 
-.v-file-input {
-  margin-bottom: 16px;
+.upload-container {
+  position: relative;
+  width: 100%;
+  height: 300px; /* 設置虛線框高度 */
+  border: 2px dashed #ccc; /* 虛線框樣式 */
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.dark-grey-text .v-label,
-.dark-grey-text input,
-.dark-grey-text .v-file-input__text {
-  color: #333333 !important; /* 深灰色文字 */
+.upload-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.upload-icon {
+  font-size: 48px;
+  color: #ccc;
+}
+
+.upload-text {
+  color: #ccc;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.v-img.my-4 {
+  display: block;
+  margin: 0 auto;
 }
 
 .gradient-button {
@@ -137,22 +199,19 @@ export default defineComponent({
   background: linear-gradient(90deg, #FF4500, #FF8C00);
 }
 
-.my-4 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-  border: 2px solid #FF8C00;
-  border-radius: 5px;
+.invisible-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
   .v-container {
-    padding: 20px 10px; /* 手机浏览时的左右内边距 */
+    padding: 20px 10px; /* 手機瀏覽時的左右內邊距 */
   }
-}
-
-/* 垂直居中图片预览 */
-.v-img.my-4 {
-  display: block;
-  margin: 0 auto;
 }
 </style>
