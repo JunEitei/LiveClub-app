@@ -9,8 +9,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddLive: typeof import('./components/AddLive.vue')['default']
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    Creator: typeof import('./components/Creator.vue')['default']
+    CreatorPage: typeof import('./components/CreatorPage.vue')['default']
     EventsPage: typeof import('./components/EventsPage.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    HomePage: typeof import('./components/HomePage.vue')['default']
     LiveForm: typeof import('./components/LiveForm.vue')['default']
     LiveList: typeof import('./components/LiveList.vue')['default']
     LivePage: typeof import('./components/LivePage.vue')['default']

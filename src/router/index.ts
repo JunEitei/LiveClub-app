@@ -1,14 +1,23 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { setupLayouts } from 'virtual:generated-layouts'
-import LivePage from '@/components/LivePage.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomePage from '@/components/HomePage.vue';
+import CreatorPage from '@/components/CreatorPage.vue';
 
-const routes: RouteRecordRaw[] = [
-  { path: '/', name: 'Live', component: LivePage },
-]
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: HomePage,
+  },
+  {
+    path: '/create',
+    name: 'Creator',
+    component: CreatorPage,
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
-})
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+});
 
-export default router
+export default router;
