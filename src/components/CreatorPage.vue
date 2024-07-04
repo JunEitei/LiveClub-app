@@ -36,6 +36,24 @@
           max-width="300"
           class="my-4"
         ></v-img>
+      </v-form>
+    </v-card>
+
+    <!-- Second Card: Select Musician Position -->
+    <v-card class="position-card">
+      <v-card-title>Select Musician Position</v-card-title>
+      <v-card-text>
+        <v-radio-group v-model="selectedPosition">
+          <v-radio value="guitarist" label="Guitarist"></v-radio>
+          <v-radio value="electric-guitarist" label="Electric Guitarist"></v-radio>
+          <!-- Add more positions as needed -->
+        </v-radio-group>
+      </v-card-text>
+    </v-card>
+
+    <!-- Third Card: Submit Button -->
+    <v-card class="submit-card">
+      <v-card-text>
         <v-btn
           v-if="userPhoto"
           type="submit"
@@ -45,7 +63,7 @@
         >
           Create Live Event
         </v-btn>
-      </v-form>
+      </v-card-text>
     </v-card>
   </v-container>
 </template>
@@ -61,6 +79,7 @@ export default defineComponent({
 
     const userPhoto = ref<File | null>(null);
     const photoPreview = ref<string | null>(null);
+    const selectedPosition = ref<string>(''); // Initially empty, change as per default selection
 
     const buttonBackground = ref('linear-gradient(90deg, #FF8C00, #FF4500)');
 
@@ -71,8 +90,14 @@ export default defineComponent({
         return;
       }
 
+      if (!selectedPosition.value) {
+        console.error('Musician position is required');
+        return;
+      }
+
       const formData = new FormData();
       formData.append('userPhoto', userPhoto.value);
+      formData.append('selectedPosition', selectedPosition.value);
 
       try {
         const response = await fetch(`${apiUrl}/live/create`, {
@@ -126,6 +151,7 @@ export default defineComponent({
     return {
       userPhoto,
       photoPreview,
+      selectedPosition,
       createLiveEvent,
       openFilePicker,
       onFileSelected,
@@ -209,6 +235,22 @@ export default defineComponent({
   height: 100%;
   opacity: 0;
   cursor: pointer;
+}
+
+.position-card {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #444444; /* 深灰色背景 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-card {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #555555; /* 深灰色背景 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {
