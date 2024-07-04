@@ -2,27 +2,25 @@
   <v-container>
     <v-card class="card-container">
       <v-form @submit.prevent="createLiveEvent" class="form-container">
-        <v-text-field
-          v-model="userName"
-          label="Your Name"
-          required
-          class="dark-grey-text"
-        ></v-text-field>
         <v-file-input
           v-model="userPhoto"
-          label="Upload Your Photo"
+          label="Upload One Photo"
           accept="image/*"
           @change="previewPhoto"
           required
           class="dark-grey-text"
         ></v-file-input>
-        <v-img
-          v-if="photoPreview"
-          :src="photoPreview"
-          alt="Photo Preview"
-          max-width="300"
-          class="my-4"
-        ></v-img>
+        <v-row justify="center">
+          <v-col cols="12">
+            <v-img
+              v-if="photoPreview"
+              :src="photoPreview"
+              alt="Photo Preview"
+              max-width="300"
+              class="my-4"
+            ></v-img>
+          </v-col>
+        </v-row>
         <v-btn
           type="submit"
           :style="{ background: buttonBackground, color: 'white' }"
@@ -45,7 +43,6 @@ export default defineComponent({
     const apiUrl = import.meta.env.VITE_API_URL;
     const router = useRouter();
 
-    const userName = ref('');
     const userPhoto = ref<File | null>(null);
     const photoPreview = ref<string | null>(null);
 
@@ -59,7 +56,6 @@ export default defineComponent({
       }
 
       const formData = new FormData();
-      formData.append('userName', userName.value);
       formData.append('userPhoto', userPhoto.value);
 
       try {
@@ -92,7 +88,6 @@ export default defineComponent({
     };
 
     return {
-      userName,
       userPhoto,
       photoPreview,
       createLiveEvent,
@@ -122,7 +117,6 @@ export default defineComponent({
   margin-right: 16px; /* 右边外边距 */
 }
 
-.v-text-field,
 .v-file-input {
   margin-bottom: 16px;
 }
@@ -154,5 +148,11 @@ export default defineComponent({
   .v-container {
     padding: 20px 10px; /* 手机浏览时的左右内边距 */
   }
+}
+
+/* 垂直居中图片预览 */
+.v-img.my-4 {
+  display: block;
+  margin: 0 auto;
 }
 </style>
