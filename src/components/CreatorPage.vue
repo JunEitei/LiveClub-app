@@ -1,78 +1,38 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="createLiveEvent">
-      <v-text-field
-        v-model="liveTitle"
-        label="Live Title"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="liveDescription"
-        label="Description"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="startTime"
-        label="Start Time"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="endTime"
-        label="End Time"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="liveLocationName"
-        label="Location Name"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="liveLocationAddress"
-        label="Location Address"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="liveLink"
-        label="Link"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="ticketPrice"
-        label="Ticket Price"
-        type="number"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="liveType"
-        label="Live Type"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="organizer"
-        label="Organizer"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="contactPhone"
-        label="Contact Phone"
-        required
-      ></v-text-field>
-      <v-checkbox
-        v-model="publicFlag"
-        label="Public Event"
-      ></v-checkbox>
-      <v-checkbox
-        v-model="cancelledFlag"
-        label="Cancelled Event"
-      ></v-checkbox>
-      <v-text-field
-        v-model="audienceLimit"
-        label="Audience Limit"
-        type="number"
-        required
-      ></v-text-field>
-      <v-btn type="submit" color="primary" block>Create Live Event</v-btn>
-    </v-form>
+    <v-card class="card-container">
+      <v-form @submit.prevent="createLiveEvent" class="form-container">
+        <v-text-field
+          v-model="userName"
+          label="Your Name"
+          required
+          class="dark-grey-text"
+        ></v-text-field>
+        <v-file-input
+          v-model="userPhoto"
+          label="Upload Your Photo"
+          accept="image/*"
+          @change="previewPhoto"
+          required
+          class="dark-grey-text"
+        ></v-file-input>
+        <v-img
+          v-if="photoPreview"
+          :src="photoPreview"
+          alt="Photo Preview"
+          max-width="300"
+          class="my-4"
+        ></v-img>
+        <v-btn
+          type="submit"
+          :style="{ background: buttonBackground, color: 'white' }"
+          class="gradient-button"
+          block
+        >
+          Create Live Event
+        </v-btn>
+      </v-form>
+    </v-card>
   </v-container>
 </template>
 
@@ -85,47 +45,27 @@ export default defineComponent({
     const apiUrl = import.meta.env.VITE_API_URL;
     const router = useRouter();
 
-    const liveTitle = ref('');
-    const liveDescription = ref('');
-    const startTime = ref('');
-    const endTime = ref('');
-    const liveLocationName = ref('');
-    const liveLocationAddress = ref('');
-    const liveLink = ref('');
-    const ticketPrice = ref(0);
-    const liveType = ref('');
-    const organizer = ref('');
-    const contactPhone = ref('');
-    const publicFlag = ref(false);
-    const cancelledFlag = ref(false);
-    const audienceLimit = ref(0);
+    const userName = ref('');
+    const userPhoto = ref<File | null>(null);
+    const photoPreview = ref<string | null>(null);
+
+    const buttonBackground = ref('linear-gradient(90deg, #FF8C00, #FF4500)');
 
     // Create live event
     const createLiveEvent = async () => {
-      const live = {
-        liveTitle: liveTitle.value,
-        liveDescription: liveDescription.value,
-        startTime: startTime.value,
-        endTime: endTime.value,
-        liveLocationName: liveLocationName.value,
-        liveLocationAddress: liveLocationAddress.value,
-        liveLink: liveLink.value,
-        ticketPrice: ticketPrice.value,
-        liveType: liveType.value,
-        organizer: organizer.value,
-        contactPhone: contactPhone.value,
-        publicFlag: publicFlag.value,
-        cancelledFlag: cancelledFlag.value,
-        audienceLimit: audienceLimit.value,
-      };
+      if (!userPhoto.value) {
+        console.error('Photo is required');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('userName', userName.value);
+      formData.append('userPhoto', userPhoto.value);
 
       try {
         const response = await fetch(`${apiUrl}/live/create`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(live),
+          body: formData,
         });
 
         if (!response.ok) {
@@ -140,22 +80,24 @@ export default defineComponent({
       }
     };
 
+    // Preview photo
+    const previewPhoto = () => {
+      if (userPhoto.value) {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          photoPreview.value = e.target?.result as string;
+        };
+        reader.readAsDataURL(userPhoto.value);
+      }
+    };
+
     return {
-      liveTitle,
-      liveDescription,
-      startTime,
-      endTime,
-      liveLocationName,
-      liveLocationAddress,
-      liveLink,
-      ticketPrice,
-      liveType,
-      organizer,
-      contactPhone,
-      publicFlag,
-      cancelledFlag,
-      audienceLimit,
+      userName,
+      userPhoto,
+      photoPreview,
       createLiveEvent,
+      previewPhoto,
+      buttonBackground,
     };
   },
 });
@@ -166,5 +108,51 @@ export default defineComponent({
   max-width: 600px;
   margin: auto;
   padding-top: 20px;
+}
+
+.card-container {
+  background-color: #333333; /* 深灰色背景 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.form-container {
+  margin-left: 16px; /* 左边外边距 */
+  margin-right: 16px; /* 右边外边距 */
+}
+
+.v-text-field,
+.v-file-input {
+  margin-bottom: 16px;
+}
+
+.dark-grey-text .v-label,
+.dark-grey-text input,
+.dark-grey-text .v-file-input__text {
+  color: #333333 !important; /* 深灰色文字 */
+}
+
+.gradient-button {
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease-in-out;
+}
+
+.gradient-button:hover {
+  background: linear-gradient(90deg, #FF4500, #FF8C00);
+}
+
+.my-4 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  border: 2px solid #FF8C00;
+  border-radius: 5px;
+}
+
+@media (max-width: 600px) {
+  .v-container {
+    padding: 20px 10px; /* 手机浏览时的左右内边距 */
+  }
 }
 </style>

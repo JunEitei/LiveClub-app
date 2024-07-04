@@ -17,7 +17,7 @@
           block
           v-bind:class="{ 'button-transition': buttonTransition }"
         >
-        <span class="artistic-font">ライブ</span>
+        <span class="artistic-font">Live Club</span>
         </v-btn>
       </v-col>
     </v-row>
@@ -157,7 +157,7 @@ export default defineComponent({
 
 /* 艺术字体样式 */
 .artistic-font {
-  font-family: 'Hannari Mincho', sans-serif; /* 使用Google Fonts中的Roboto字体 */
+  font-family: 'Roboto', sans-serif; /* 使用Google Fonts中的Roboto字体 */
   font-weight: 500; /* 可根据需要调整字体粗细 */
   font-size: 1.5rem; /* 可根据需要调整字体大小 */
   /* 可以继续添加其他样式，如颜色、字间距等 */
