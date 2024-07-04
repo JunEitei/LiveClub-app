@@ -2,29 +2,31 @@
   <v-container>
     <v-card class="card-container" @click="openFilePicker">
       <v-form @submit.prevent="createLiveEvent" class="form-container">
-        <div class="upload-container" v-if="!userPhoto">
+        <div class="upload-container">
+          <v-img
+            v-if="!userPhoto && photoPreview"
+            :src="photoPreview"
+            alt="Photo Preview"
+            max-width="300"
+            class="my-4"
+            @click.stop="openFilePicker"
+          ></v-img>
           <input
             ref="fileInput"
             id="fileInput"
             type="file"
             accept="image/*"
-            style="display: none;"
+            style="position: absolute; top: 0; left: 0; opacity: 0; width: 100%; height: 100%;"
             @change="onFileSelected"
           />
-          <v-img
-            v-if="photoPreview"
-            :src="photoPreview"
-            alt="Photo Preview"
-            max-width="300"
-            class="my-4"
-          ></v-img>
-          <div class="upload-overlay">
+          <div class="upload-overlay" v-if="!userPhoto">
             <v-icon class="upload-icon">mdi-camera</v-icon>
             <div class="upload-text">Click to Upload Your Photo</div>
           </div>
           <button
             type="button"
             class="invisible-button"
+            @click.stop="openFilePicker"
           ></button>
         </div>
         <v-img
@@ -90,7 +92,7 @@ export default defineComponent({
       }
     };
 
-    // Open file picker when card is clicked
+    // Open file picker when button is clicked
     const openFilePicker = () => {
       const fileInput = document.getElementById('fileInput') as HTMLInputElement;
       if (fileInput) {
