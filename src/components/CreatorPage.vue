@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <!-- First Card: Upload Photo -->
     <v-card class="card-container" @click="openFilePicker">
       <v-form @submit.prevent="createLiveEvent" class="form-container">
         <div class="upload-container">
@@ -55,7 +56,6 @@
     <v-card class="submit-card">
       <v-card-text>
         <v-btn
-          v-if="userPhoto"
           type="submit"
           :style="{ background: buttonBackground, color: 'white' }"
           class="gradient-button"
