@@ -54,12 +54,36 @@
       </v-card-title>
       <v-card-text>
         <v-radio-group v-model="selectedPosition">
-          <v-radio :value="translations[selectedLanguage].options.vocal" :label="translations[selectedLanguage].options.vocal"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.piano" :label="translations[selectedLanguage].options.piano"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.drums" :label="translations[selectedLanguage].options.drums"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.bass" :label="translations[selectedLanguage].options.bass"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.guitar" :label="translations[selectedLanguage].options.guitar"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.others" :label="translations[selectedLanguage].options.others"></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.vocal"
+            :label="translations[selectedLanguage].options.vocal"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.piano"
+            :label="translations[selectedLanguage].options.piano"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.drums"
+            :label="translations[selectedLanguage].options.drums"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.bass"
+            :label="translations[selectedLanguage].options.bass"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.guitar"
+            :label="translations[selectedLanguage].options.guitar"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.others"
+            :label="translations[selectedLanguage].options.others"
+            class="custom-radio"
+          ></v-radio>
         </v-radio-group>
       </v-card-text>
     </v-card>
@@ -257,7 +281,7 @@ export default defineComponent({
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform  :translate(-50%, -50%);
   text-align: center;
 }
 
@@ -297,7 +321,6 @@ export default defineComponent({
   cursor: pointer;
 }
 
-
 .language-select {
   position: absolute;
   top: 0;
@@ -308,6 +331,7 @@ export default defineComponent({
 
 .position-card {
   margin-top: 20px;
+  height: 306px;
   padding: 20px;
   background-color: #444444; /* 深灰色背景 */
   border-radius: 10px;
@@ -321,6 +345,17 @@ export default defineComponent({
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.custom-radio input[type="radio"]:checked + .v-item--active .v-item__content {
+  background-color: #FFA500; /* 设置选中时的背景色为橙色 */
+}
+
+.v-card-title {
+  margin-top: -13px; /* 将标题往上移动 10px */
+  font-weight: bold;
+  font-size: 19px;
+}
+
 
 @media (max-width: 600px) {
   .v-container {
