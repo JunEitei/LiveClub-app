@@ -2,6 +2,7 @@
   <v-app>
     <v-main>
       <router-view />
+      <BottomNavigation />
     </v-main>
   </v-app>
 </template>
@@ -9,8 +10,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import BottomNavigation from './components/BottomNavigation.vue';
 
 export default defineComponent({
+  components: {
+    BottomNavigation,
+  },
   setup() {
     const currentTab = ref('/');
     const router = useRouter();

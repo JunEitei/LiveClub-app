@@ -1,12 +1,6 @@
 <template>
   <v-container>
-    <!-- Loading Indicator -->
-    <v-row v-if="loading">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
-    </v-row>
-
-    <!-- Live Event Cards -->
-    <v-row v-else>
+    <v-row>
       <v-col cols="12" v-for="(item, index) in lives" :key="item.id">
         <v-card class="live-card">
           <v-row align="center">

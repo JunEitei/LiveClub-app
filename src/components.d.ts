@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AddLive: typeof import('./components/AddLive.vue')['default']
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    BottomNavigation: typeof import('./components/BottomNavigation.vue')['default']
     Creator: typeof import('./components/Creator.vue')['default']
     CreatorPage: typeof import('./components/CreatorPage.vue')['default']
     EventsPage: typeof import('./components/EventsPage.vue')['default']
