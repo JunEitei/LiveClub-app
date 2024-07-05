@@ -8,35 +8,28 @@
       </div>
     </div>
 
-    <v-row class="justify-center mb-4">
-      <v-col cols="12">
-        <v-btn
-          color="primary"
-          :style="{ background: buttonBackground }"
-          @click="navigateToCreate"
-          block
-          v-bind:class="{ 'button-transition': buttonTransition }"
-        >
-        <span class="artistic-font">Live Club</span>
-        </v-btn>
-      </v-col>
-    </v-row>
-
-    <v-row v-if="loading && !refreshing" class="justify-center">
+    <v-row v-if="loading && !refreshing" class="justify-center mb-4">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </v-row>
 
     <v-row v-else>
       <v-col cols="12" v-for="(item, index) in lives" :key="item.id">
         <v-card class="live-card">
-          <v-card-title class="text-center">{{ item.liveTitle }}</v-card-title>
-          <v-card-text>
-            <div><strong>Description:</strong> {{ item.liveDescription }}</div>
-            <div><strong>Start Time:</strong> {{ formatDate(item.startTime) }}</div>
-            <div><strong>End Time:</strong> {{ formatDate(item.endTime) }}</div>
-            <div><strong>Location:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
-            <div><strong>Link:</strong> <a :href="item.liveLink" target="_blank">{{ item.liveLink }}</a></div>
-          </v-card-text>
+          <v-row align="center">
+            <v-col cols="12" md="4">
+              <v-img :src="item.image" alt="Live Image" class="live-image"></v-img>
+            </v-col>
+            <v-col cols="12" md="8">
+              <v-card-title class="text-center">{{ item.liveTitle }}</v-card-title>
+              <v-card-text>
+                <div><strong>Description:</strong> {{ item.liveDescription }}</div>
+                <div><strong>Start Time:</strong> {{ formatDate(item.startTime) }}</div>
+                <div><strong>End Time:</strong> {{ formatDate(item.endTime) }}</div>
+                <div><strong>Location:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
+                <div><strong>Link:</strong> <a :href="item.liveLink" target="_blank">{{ item.liveLink }}</a></div>
+              </v-card-text>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -47,15 +40,25 @@
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
+interface LiveEvent {
+  id: number;
+  liveTitle: string;
+  liveDescription: string;
+  startTime: string;
+  endTime: string;
+  liveLocationName: string;
+  liveLocationAddress: string;
+  liveLink: string;
+  image: string;
+}
+
 export default defineComponent({
   setup() {
     const apiUrl = import.meta.env.VITE_API_URL;
-    const lives = ref([]);
+    const lives = ref<LiveEvent[]>([]);
     const loading = ref(true);
     const refreshing = ref(false);
     const router = useRouter();
-    const buttonTransition = ref(false);
-    const buttonBackground = ref('linear-gradient(90deg, #3f51b5, #f44336)');
 
     // Fetch live events from backend
     const fetchLiveEvents = async () => {
@@ -65,18 +68,22 @@ export default defineComponent({
           throw new Error('Failed to fetch live events');
         }
         const data = await response.json();
-        lives.value = data.data;
+        lives.value = data.data.map((item: any) => ({
+          id: item.id,
+          liveTitle: item.liveTitle,
+          liveDescription: item.liveDescription,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          liveLocationName: item.liveLocationName,
+          liveLocationAddress: item.liveLocationAddress,
+          liveLink: item.liveLink,
+          image: item.image ? item.image : 'https://via.placeholder.com/200x200.png?text=Sample+Image'
+        }));
       } catch (error) {
         console.error('Error fetching live events:', error);
       } finally {
         loading.value = false;
         refreshing.value = false;
-        buttonTransition.value = true;
-        buttonBackground.value = 'linear-gradient(90deg, #f44336, #3f51b5)';
-        setTimeout(() => {
-          buttonTransition.value = false;
-          buttonBackground.value = 'linear-gradient(90deg, #3f51b5, #f44336)';
-        }, 500);
       }
     };
 
@@ -103,38 +110,14 @@ export default defineComponent({
       await fetchLiveEvents();
     };
 
-    // Handle touch event for pull-to-refresh
-    const handleTouchStart = (event: TouchEvent) => {
-      startY.value = event.touches[0].pageY;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      if (window.scrollY === 0 && event.touches[0].pageY > startY.value) {
-        refreshing.value = true;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      if (refreshing.value) {
-        refreshLives();
-      }
-    };
-
-    const startY = ref(0);
-
     // Lifecycle hook: fetch live events on component mount
     onMounted(() => {
       fetchLiveEvents();
-      window.addEventListener('touchstart', handleTouchStart);
-      window.addEventListener('touchmove', handleTouchMove);
-      window.addEventListener('touchend', handleTouchEnd);
     });
 
     // Remove touch event listener on unmount
     onUnmounted(() => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      // Remove any event listeners if needed
     });
 
     return {
@@ -144,8 +127,6 @@ export default defineComponent({
       formatDate,
       navigateToCreate,
       refreshLives,
-      buttonTransition,
-      buttonBackground,
     };
   },
 });
@@ -162,6 +143,7 @@ export default defineComponent({
   font-size: 1.5rem; /* 可根据需要调整字体大小 */
   /* 可以继续添加其他样式，如颜色、字间距等 */
 }
+
 .live-card {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   border-radius: 33px;
@@ -178,9 +160,10 @@ export default defineComponent({
   max-width: 600px;
 }
 
-.v-col {
-  display: flex;
-  justify-content: center;
+.v-img.live-image {
+  width: 100%;
+  border-top-left-radius: 33px;
+  border-bottom-left-radius: 33px;
 }
 
 .v-card {
