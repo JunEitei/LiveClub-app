@@ -42,12 +42,24 @@
 
     <!-- Second Card: Select Musician Position -->
     <v-card class="position-card">
-      <v-card-title>Select Musician Position</v-card-title>
+      <v-card-title class="d-flex justify-space-between align-center">
+        {{ translations[selectedLanguage].title }}
+        <v-select
+          v-model="selectedLanguage"
+          :items="languages"
+          label=""
+          @change="translate"
+          class="language-select"
+        ></v-select>
+      </v-card-title>
       <v-card-text>
         <v-radio-group v-model="selectedPosition">
-          <v-radio value="guitarist" label="Guitarist"></v-radio>
-          <v-radio value="electric-guitarist" label="Electric Guitarist"></v-radio>
-          <!-- Add more positions as needed -->
+          <v-radio :value="translations[selectedLanguage].options.vocal" :label="translations[selectedLanguage].options.vocal"></v-radio>
+          <v-radio :value="translations[selectedLanguage].options.piano" :label="translations[selectedLanguage].options.piano"></v-radio>
+          <v-radio :value="translations[selectedLanguage].options.drums" :label="translations[selectedLanguage].options.drums"></v-radio>
+          <v-radio :value="translations[selectedLanguage].options.bass" :label="translations[selectedLanguage].options.bass"></v-radio>
+          <v-radio :value="translations[selectedLanguage].options.guitar" :label="translations[selectedLanguage].options.guitar"></v-radio>
+          <v-radio :value="translations[selectedLanguage].options.others" :label="translations[selectedLanguage].options.others"></v-radio>
         </v-radio-group>
       </v-card-text>
     </v-card>
@@ -80,6 +92,45 @@ export default defineComponent({
     const userPhoto = ref<File | null>(null);
     const photoPreview = ref<string | null>(null);
     const selectedPosition = ref<string>(''); // Initially empty, change as per default selection
+    const selectedLanguage = ref<string>('ja'); // Default language is Japanese
+
+    const languages = ['en', 'zh', 'ja'];
+
+    const translations = {
+      en: {
+        title: 'Select Musician Position',
+        options: {
+          vocal: 'Vocal',
+          piano: 'Piano',
+          drums: 'Drum/Percussion',
+          bass: 'Bass',
+          guitar: 'Guitar',
+          others: 'Others',
+        },
+      },
+      zh: {
+        title: '选择音乐家位置',
+        options: {
+          vocal: '人声',
+          piano: '钢琴',
+          drums: '鼓/打击乐',
+          bass: '贝斯',
+          guitar: '吉他',
+          others: '其他',
+        },
+      },
+      ja: {
+        title: 'ミュージシャンのポジションを選択',
+        options: {
+          vocal: 'ボーカル',
+          piano: 'ピアノ',
+          drums: 'ドラム/パーカッション',
+          bass: 'ベース',
+          guitar: 'ギター',
+          others: 'その他',
+        },
+      },
+    };
 
     const buttonBackground = ref('linear-gradient(90deg, #FF8C00, #FF4500)');
 
@@ -148,14 +199,23 @@ export default defineComponent({
       reader.readAsDataURL(file);
     };
 
+    // Translate content based on selected language
+    const translate = () => {
+      console.log('Language changed to:', selectedLanguage.value);
+    };
+
     return {
       userPhoto,
       photoPreview,
       selectedPosition,
+      selectedLanguage,
+      languages,
+      translations,
       createLiveEvent,
       openFilePicker,
       onFileSelected,
       buttonBackground,
+      translate,
     };
   },
 });
@@ -235,6 +295,15 @@ export default defineComponent({
   height: 100%;
   opacity: 0;
   cursor: pointer;
+}
+
+
+.language-select {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px; /* 固定宽度 */
+  z-index: 999; /* 提高层级 */
 }
 
 .position-card {
