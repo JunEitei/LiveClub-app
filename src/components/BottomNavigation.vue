@@ -36,7 +36,7 @@
   /* Ensure active color */
   .v-btn.active .v-icon,
   .v-btn.active span {
-    color: #ef8b3a !important; /* Important to override other styles */
+    color: orange !important; /* Important to override other styles */
   }
   
   /* Adjust the width of the buttons */

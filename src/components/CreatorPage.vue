@@ -1,18 +1,6 @@
 <template>
   <v-container>
-    <!-- Cached Data Card -->
-    <v-card v-if="showCachedData" class="cached-data-card mb-4">
-      <v-card-text>
-        <v-row align="center">
-          <v-col cols="2">
-            <v-img :src="cachedData.photoPreview" alt="Cached Photo" max-width="80"></v-img>
-          </v-col>
-          <v-col cols="10">
-            <div>{{ cachedData.selectedPosition }}</div>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+
 
     <!-- First Card: Upload Photo -->
     <v-card class="card-container" @click="openFilePicker">
@@ -58,15 +46,6 @@
       </v-card-text>
     </v-card>
 
-    <!-- Third Card: Submit Button -->
-    <v-card class="submit-card">
-      <v-card-text>
-        <v-btn type="submit" :style="{ background: buttonBackground, color: 'white' }" class="gradient-button" block
-          @click="cacheData">
-          JOIN
-        </v-btn>
-      </v-card-text>
-    </v-card>
   </v-container>
 </template>
 
@@ -104,7 +83,7 @@ export default defineComponent({
         },
       },
       '中文': {
-        title: '选择音乐家位置',
+        title: '選擇位置',
         options: {
           vocal: '主唱',
           piano: '鋼琴',
@@ -333,16 +312,10 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.submit-card {
-  background-color: #333333;
-  color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
 .cached-data-card {
   margin-bottom: 20px;
+  background-color: orange;
   /* 设置卡片与下方卡片之间的间距 */
 }
 
@@ -350,12 +323,6 @@ body {
   width: auto;
 }
 
-.gradient-button {
-  background: linear-gradient(90deg, #FF8C00, #FF4500);
-  color: white;
-  text-transform: none;
-  width: 100%;
-}
 
 .custom-radio .v-input--selection-controls__ripple {
   width: 30px;
