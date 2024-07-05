@@ -20,8 +20,8 @@
               <v-img :src="item.image" alt="Live Image" class="live-image"></v-img>
             </v-col>
             <v-col cols="12" md="8">
-              <v-card-title class="text-center">{{ item.liveTitle }}</v-card-title>
-              <v-card-text>
+              <v-card-title class="text-center artistic-font">{{ item.liveTitle }}</v-card-title>
+              <v-card-text class="artistic-font">
                 <div><strong>Description:</strong> {{ item.liveDescription }}</div>
                 <div><strong>Start Time:</strong> {{ formatDate(item.startTime) }}</div>
                 <div><strong>End Time:</strong> {{ formatDate(item.endTime) }}</div>
@@ -145,25 +145,28 @@ export default defineComponent({
 }
 
 .live-card {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 33px;
-  transition: transform 0.3s ease-in-out;
-  min-height: 100px;
-  margin-bottom: 16px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 调整阴影效果 */
+  border-radius: 20px; /* 调整圆角 */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* 添加阴影过渡效果 */
+  min-height: 200px; /* 调整最小高度 */
+  margin-bottom: 24px; /* 调整底部边距 */
 
   &:hover {
-    transform: scale(1.02);
+    transform: scale(1.03); /* 调整鼠标悬停时的缩放效果 */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* 调整鼠标悬停时的阴影效果 */
   }
 }
 
 .v-container {
-  max-width: 600px;
+  max-width: 800px; /* 调整容器的最大宽度 */
 }
 
 .v-img.live-image {
   width: 100%;
-  border-top-left-radius: 33px;
-  border-bottom-left-radius: 33px;
+  height: 100%; /* 调整图片高度 */
+  object-fit: cover; /* 图片填充方式 */
+  border-top-left-radius: 20px; /* 调整左上角圆角 */
+  border-bottom-left-radius: 20px; /* 调整左下角圆角 */
 }
 
 .v-card {
@@ -222,7 +225,7 @@ export default defineComponent({
 }
 
 .mb-4 {
-  margin-bottom: 16px;
+  margin-bottom: 24px; /* 调整底部边距 */
 }
 
 .v-btn {
