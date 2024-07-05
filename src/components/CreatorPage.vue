@@ -92,12 +92,12 @@ export default defineComponent({
     const userPhoto = ref<File | null>(null);
     const photoPreview = ref<string | null>(null);
     const selectedPosition = ref<string>(''); // Initially empty, change as per default selection
-    const selectedLanguage = ref<string>('ja'); // Default language is Japanese
+    const selectedLanguage = ref<string>('日本語'); // Default language is Japanese
 
-    const languages = ['en', 'zh', 'ja'];
+    const languages = ['English', '中文', '日本語'];
 
     const translations = {
-      en: {
+      'English': {
         title: 'Select Musician Position',
         options: {
           vocal: 'Vocal',
@@ -108,7 +108,7 @@ export default defineComponent({
           others: 'Others',
         },
       },
-      zh: {
+      '中文': {
         title: '选择音乐家位置',
         options: {
           vocal: '人声',
@@ -119,8 +119,8 @@ export default defineComponent({
           others: '其他',
         },
       },
-      ja: {
-        title: 'ミュージシャンのポジションを選択',
+      '日本語': {
+        title: 'ポジション選択',
         options: {
           vocal: 'ボーカル',
           piano: 'ピアノ',
