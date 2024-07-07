@@ -22,7 +22,7 @@
           />
           <div class="upload-overlay" v-if="!userPhoto">
             <v-icon class="upload-icon">mdi-camera</v-icon>
-            <div class="upload-text">Click to Upload Your Photo</div>
+            <div class="upload-text">押して君の写真をアップロード</div>
           </div>
           <button
             type="button"
@@ -92,12 +92,13 @@
     <v-card class="submit-card">
       <v-card-text>
         <v-btn
+        @click="createLiveEvent"
           type="submit"
           :style="{ background: buttonBackground, color: 'white' }"
           class="gradient-button"
           block
         >
-          Create Live Event
+        ライブを開始する
         </v-btn>
       </v-card-text>
     </v-card>
@@ -160,36 +161,7 @@ export default defineComponent({
 
     // Create live event
     const createLiveEvent = async () => {
-      if (!userPhoto.value) {
-        console.error('Photo is required');
-        return;
-      }
-
-      if (!selectedPosition.value) {
-        console.error('Musician position is required');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('userPhoto', userPhoto.value);
-      formData.append('selectedPosition', selectedPosition.value);
-
-      try {
-        const response = await fetch(`${apiUrl}/live/create`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to create live event');
-        }
-
-        const data = await response.json();
-        console.log('Live event created:', data);
-        router.push('/');
-      } catch (error) {
-        console.error('Error creating live event:', error);
-      }
+      router.push('/');
     };
 
     // Open file picker when button is clicked
@@ -214,6 +186,7 @@ export default defineComponent({
       }
     };
 
+    
     // Preview photo
     const previewPhoto = (file: File) => {
       const reader = new FileReader();
