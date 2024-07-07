@@ -192,10 +192,10 @@ export default defineComponent({
         const selectedFile = target.files[0];
         userPhoto.value = selectedFile;
         previewPhoto(selectedFile);
-        const uploadContainer = document.querySelector('.upload-container');
-        if (uploadContainer) {
-          uploadContainer.style.display = 'none';
-        }
+        const uploadContainer = document.getElementById('upload-container');
+if (uploadContainer) {
+  (uploadContainer as HTMLElement).style.display = 'none';
+}
       }
     };
 

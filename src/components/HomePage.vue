@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" v-for="(item, index) in lives" :key="item.id">
+      <v-col cols="12" v-for="(item) in lives" :key="item.id">
         <v-card class="live-card">
           <v-row align="center">
             <v-col cols="12" md="4">
