@@ -1,23 +1,42 @@
 <template>
   <v-container>
-
-
     <!-- First Card: Upload Photo -->
     <v-card class="card-container" @click="openFilePicker">
       <v-form @submit.prevent="createLiveEvent" class="form-container">
         <div class="upload-container">
-          <v-img v-if="!userPhoto && photoPreview" :src="photoPreview" alt="Photo Preview" class="my-4"
-            @click.stop="openFilePicker"></v-img>
-          <input ref="fileInput" id="fileInput" type="file" accept="image/*"
+          <v-img
+            v-if="!userPhoto && photoPreview"
+            :src="photoPreview"
+            alt="Photo Preview"
+            max-width="300"
+            class="my-4"
+            @click.stop="openFilePicker"
+          ></v-img>
+          <input
+            ref="fileInput"
+            id="fileInput"
+            type="file"
+            accept="image/*"
             style="position: absolute; top: 0; left: 0; opacity: 0; width: 100%; height: 100%;"
-            @change="onFileSelected" />
+            @change="onFileSelected"
+          />
           <div class="upload-overlay" v-if="!userPhoto">
             <v-icon class="upload-icon">mdi-camera</v-icon>
             <div class="upload-text">Click to Upload Your Photo</div>
           </div>
-          <button type="button" class="invisible-button" @click.stop="openFilePicker"></button>
+          <button
+            type="button"
+            class="invisible-button"
+            @click.stop="openFilePicker"
+          ></button>
         </div>
-        <v-img v-if="userPhoto && photoPreview" :src="photoPreview" alt="Photo Preview" class="my-4"></v-img>
+        <v-img
+          v-if="userPhoto && photoPreview"
+          :src="photoPreview"
+          alt="Photo Preview"
+          max-width="300"
+          class="my-4"
+        ></v-img>
       </v-form>
     </v-card>
 
@@ -25,32 +44,68 @@
     <v-card class="position-card">
       <v-card-title class="d-flex justify-space-between align-center">
         {{ translations[selectedLanguage].title }}
-        <v-select v-model="selectedLanguage" :items="languages" label="" class="language-select" max-width="120"
-          @change="translate"></v-select>
+        <v-select
+          v-model="selectedLanguage"
+          :items="languages"
+          label=""
+          @change="translate"
+          class="language-select"
+        ></v-select>
       </v-card-title>
       <v-card-text>
         <v-radio-group v-model="selectedPosition">
-          <v-radio :value="translations[selectedLanguage].options.vocal"
-            :label="translations[selectedLanguage].options.vocal" class="custom-radio"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.piano"
-            :label="translations[selectedLanguage].options.piano" class="custom-radio"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.drums"
-            :label="translations[selectedLanguage].options.drums" class="custom-radio"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.bass"
-            :label="translations[selectedLanguage].options.bass" class="custom-radio"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.guitar"
-            :label="translations[selectedLanguage].options.guitar" class="custom-radio"></v-radio>
-          <v-radio :value="translations[selectedLanguage].options.others"
-            :label="translations[selectedLanguage].options.others" class="custom-radio"></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.vocal"
+            :label="translations[selectedLanguage].options.vocal"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.piano"
+            :label="translations[selectedLanguage].options.piano"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.drums"
+            :label="translations[selectedLanguage].options.drums"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.bass"
+            :label="translations[selectedLanguage].options.bass"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.guitar"
+            :label="translations[selectedLanguage].options.guitar"
+            class="custom-radio"
+          ></v-radio>
+          <v-radio
+            :value="translations[selectedLanguage].options.others"
+            :label="translations[selectedLanguage].options.others"
+            class="custom-radio"
+          ></v-radio>
         </v-radio-group>
       </v-card-text>
     </v-card>
 
+    <!-- Third Card: Submit Button -->
+    <v-card class="submit-card">
+      <v-card-text>
+        <v-btn
+          type="submit"
+          :style="{ background: buttonBackground, color: 'white' }"
+          class="gradient-button"
+          block
+        >
+          Create Live Event
+        </v-btn>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -62,17 +117,12 @@ export default defineComponent({
     const photoPreview = ref<string | null>(null);
     const selectedPosition = ref<string>(''); // Initially empty, change as per default selection
     const selectedLanguage = ref<string>('日本語'); // Default language is Japanese
-    const showCachedData = ref<boolean>(false);
-    const cachedData = ref<{ photoPreview: string | null; selectedPosition: string }>({
-      photoPreview: null,
-      selectedPosition: '',
-    });
 
     const languages = ['English', '中文', '日本語'];
 
     const translations = {
       'English': {
-        title: 'Select Position',
+        title: 'Select Musician Position',
         options: {
           vocal: 'Vocal',
           piano: 'Piano',
@@ -83,12 +133,12 @@ export default defineComponent({
         },
       },
       '中文': {
-        title: '選擇位置',
+        title: '选择音乐家位置',
         options: {
-          vocal: '主唱',
-          piano: '鋼琴',
-          drums: '鼓/打擊樂',
-          bass: '貝斯',
+          vocal: '人声',
+          piano: '钢琴',
+          drums: '鼓/打击乐',
+          bass: '贝斯',
           guitar: '吉他',
           others: '其他',
         },
@@ -107,16 +157,6 @@ export default defineComponent({
     };
 
     const buttonBackground = ref('linear-gradient(90deg, #FF8C00, #FF4500)');
-
-    // On mounted, check if there is cached data
-    onMounted(() => {
-      const cached = localStorage.getItem('cachedData');
-      if (cached) {
-        const parsedData = JSON.parse(cached);
-        cachedData.value = parsedData;
-        showCachedData.value = true;
-      }
-    });
 
     // Create live event
     const createLiveEvent = async () => {
@@ -146,35 +186,10 @@ export default defineComponent({
 
         const data = await response.json();
         console.log('Live event created:', data);
-
-        // Reset form after successful submission
-        resetForm();
-
         router.push('/');
       } catch (error) {
         console.error('Error creating live event:', error);
       }
-    };
-
-    // Cache data when "JOIN" button is clicked
-    const cacheData = () => {
-      if (!photoPreview.value || !selectedPosition.value) {
-        console.warn('Photo or position is missing. Cache operation aborted.');
-        return;
-      }
-
-      cachedData.value.photoPreview = photoPreview.value;
-      cachedData.value.selectedPosition = selectedPosition.value;
-      localStorage.setItem('cachedData', JSON.stringify(cachedData.value));
-      showCachedData.value = true;
-      createLiveEvent();
-    };
-
-    // Reset form after submission
-    const resetForm = () => {
-      userPhoto.value = null;
-      photoPreview.value = null;
-      selectedPosition.value = '';
     };
 
     // Open file picker when button is clicked
@@ -192,10 +207,10 @@ export default defineComponent({
         const selectedFile = target.files[0];
         userPhoto.value = selectedFile;
         previewPhoto(selectedFile);
-        const uploadContainer = document.getElementById('upload-container');
-if (uploadContainer) {
-  (uploadContainer as HTMLElement).style.display = 'none';
-}
+        const uploadContainer = document.querySelector('.upload-container');
+        if (uploadContainer) {
+          uploadContainer.style.display = 'none';
+        }
       }
     };
 
@@ -225,112 +240,126 @@ if (uploadContainer) {
       onFileSelected,
       buttonBackground,
       translate,
-      showCachedData,
-      cachedData,
-      cacheData,
     };
   },
 });
 </script>
+
 <style scoped>
-body {
-  background-color: #222222;
-  color: #ffffff;
-  font-family: 'Noto Sans JP', sans-serif;
-}
-
-.v-application {
-  background-color: #222222;
-  color: #ffffff;
-}
-
-.v-card {
-  background-color: #333333;
-  color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.v-container {
+  max-width: 600px;
+  margin: auto;
+  padding-top: 20px;
 }
 
 .card-container {
-  background-color: #333333;
-  color: #ffffff;
-  padding: 20px;
-  margin-bottom: 20px;
+  background-color: #333333; /* 深灰色背景 */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  padding: 20px;
+  cursor: pointer; /* 添加光標樣式 */
+}
+
+.form-container {
+  margin-left: 16px; /* 左邊外邊距 */
+  margin-right: 16px; /* 右邊外邊距 */
 }
 
 .upload-container {
+  position: relative;
+  width: 100%;
+  height: 300px; /* 設置虛線框高度 */
+  border: 2px dashed #ccc; /* 虛線框樣式 */
+  border-radius: 10px;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
-  background-color: #444444;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
 }
 
 .upload-overlay {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform  :translate(-50%, -50%);
   text-align: center;
 }
 
 .upload-icon {
   font-size: 48px;
-  margin-bottom: 10px;
-  color: #ffffff;
+  color: #ccc;
 }
 
 .upload-text {
+  color: #ccc;
   font-size: 16px;
-  color: #ffffff;
+  margin-top: 8px;
+}
+
+.v-img.my-4 {
+  display: block;
+  margin: 0 auto;
+}
+
+.gradient-button {
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease-in-out;
+}
+
+.gradient-button:hover {
+  background: linear-gradient(90deg, #FF4500, #FF8C00);
 }
 
 .invisible-button {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
   cursor: pointer;
 }
 
-.v-img {
-  border-radius: 10px;
+.language-select {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px; /* 固定宽度 */
+  z-index: 999; /* 提高层级 */
 }
 
 .position-card {
-  background-color: #333333;
-  color: #ffffff;
+  margin-top: 20px;
+  height: 306px;
   padding: 20px;
-  margin-bottom: 20px;
+  background-color: #444444; /* 深灰色背景 */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-.cached-data-card {
-  margin-bottom: 20px;
-  background-color: orange;
-  /* 设置卡片与下方卡片之间的间距 */
+.submit-card {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #555555; /* 深灰色背景 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.language-select {
-  width: auto;
+.custom-radio input[type="radio"]:checked + .v-item--active .v-item__content {
+  background-color: #FFA500; /* 设置选中时的背景色为橙色 */
+}
+
+.v-card-title {
+  margin-top: -13px; /* 将标题往上移动 10px */
+  font-weight: bold;
+  font-size: 19px;
 }
 
 
-.custom-radio .v-input--selection-controls__ripple {
-  width: 30px;
-  height: 30px;
-}
-
-.custom-radio .v-input--selection-controls__input {
-  width: 30px;
-  height: 30px;
+@media (max-width: 600px) {
+  .v-container {
+    padding: 20px 10px; /* 手機瀏覽時的左右內邊距 */
+  }
 }
 </style>
