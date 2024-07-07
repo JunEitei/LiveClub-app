@@ -4,18 +4,19 @@
       <v-col cols="12" v-for="(item) in lives" :key="item.id">
         <v-card class="live-card">
           <v-row align="center">
-            <v-col cols="12" md="4">
-              <v-img :src="item.image" alt="Live Image" class="live-image"></v-img>
-              <div class="wave-divider"></div> <!-- 加入這一行 -->
+            <v-col cols="12">
+              <!-- Place v-img above v-card-title for vertical alignment -->
+              <v-img :src="getLiveImage(item.liveImage)" alt="Live Image" class="live-image"></v-img>
+              <v-card-title class="text-center">{{ item.liveTitle }}</v-card-title>
+              <div class="wave-divider"></div>
             </v-col>
             <v-col cols="12" md="8">
-              <v-card-title class="text-center">{{ item.liveTitle }}</v-card-title>
               <v-card-text>
-                <div><strong>Description:</strong> {{ item.liveDescription }}</div>
-                <div><strong>Start Time:</strong> {{ formatDate(item.startTime) }}</div>
-                <div><strong>End Time:</strong> {{ formatDate(item.endTime) }}</div>
-                <div><strong>Location:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
-                <div><strong>Link:</strong> <a :href="item.liveLink" target="_blank">{{ item.liveLink }}</a></div>
+                <div class="mb-2"><strong>Description:</strong> {{ item.liveDescription }}</div>
+                <div class="mb-2"><strong>Start Time:</strong> {{ formatDate(item.startTime) }}</div>
+                <div class="mb-2"><strong>End Time:</strong> {{ formatDate(item.endTime) }}</div>
+                <div class="mb-2"><strong>Location:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
+                <!-- Link removed -->
               </v-card-text>
             </v-col>
           </v-row>
@@ -37,42 +38,44 @@ interface LiveEvent {
   endTime: string;
   liveLocationName: string;
   liveLocationAddress: string;
-  liveLink: string;
-  image: string;
+  liveImage: string; // 添加 liveImage 属性
 }
 
 export default defineComponent({
   setup() {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const lives = ref<LiveEvent[]>([]);
-    const loading = ref(true);
+    const lives = ref<LiveEvent[]>([
+      {
+        id: 1,
+        liveTitle: 'Sample Live Event 1',
+        liveDescription: 'Sample description for event 1',
+        startTime: '2024-07-07T19:00:00Z',
+        endTime: '2024-07-07T21:00:00Z',
+        liveLocationName: 'Sample Venue 1',
+        liveLocationAddress: 'Sample Address 1',
+        liveImage: 'live1.png', // 图片文件名
+      },
+      {
+        id: 2,
+        liveTitle: 'Sample Live Event 2',
+        liveDescription: 'Sample description for event 2',
+        startTime: '2024-07-08T18:30:00Z',
+        endTime: '2024-07-08T20:30:00Z',
+        liveLocationName: 'Sample Venue 2',
+        liveLocationAddress: 'Sample Address 2',
+        liveImage: 'live2.png', // 图片文件名
+      },
+      {
+        id: 3,
+        liveTitle: 'Sample Live Event 2',
+        liveDescription: 'Sample description for event 2',
+        startTime: '2024-07-08T18:30:00Z',
+        endTime: '2024-07-08T20:30:00Z',
+        liveLocationName: 'Sample Venue 2',
+        liveLocationAddress: 'Sample Address 2',
+        liveImage: 'live3.png', // 图片文件名
+      },
+    ]);
     const router = useRouter();
-
-    // Fetch live events from backend
-    const fetchLiveEvents = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/live/list`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch live events');
-        }
-        const data = await response.json();
-        lives.value = data.data.map((item: any) => ({
-          id: item.id,
-          liveTitle: item.liveTitle,
-          liveDescription: item.liveDescription,
-          startTime: item.startTime,
-          endTime: item.endTime,
-          liveLocationName: item.liveLocationName,
-          liveLocationAddress: item.liveLocationAddress,
-          liveLink: item.liveLink,
-          image: item.image ? item.image : 'https://via.placeholder.com/200x200.png?text=Sample+Image'
-        }));
-      } catch (error) {
-        console.error('Error fetching live events:', error);
-      } finally {
-        loading.value = false;
-      }
-    };
 
     // Format date
     const formatDate = (dateString: string) => {
@@ -91,16 +94,19 @@ export default defineComponent({
       router.push({ name: 'Creator' });
     };
 
+    // Function to get the correct path for live image
+    const getLiveImage = (imageName: string) => `/assets/${imageName}`;
+
     // Lifecycle hook: fetch live events on component mount
     onMounted(() => {
-      fetchLiveEvents();
+      // Removed fetchLiveEvents(); as backend connection is removed
     });
 
     return {
       lives,
-      loading,
       formatDate,
       navigateToCreate,
+      getLiveImage,
     };
   },
 });
@@ -136,5 +142,10 @@ export default defineComponent({
     rgba(255, 255, 255, 0) 100%
   );
   transform: translateY(50%);
+}
+
+.text-center {
+  margin-bottom: 12px;
+  font-weight: bold;
 }
 </style>

@@ -2,10 +2,10 @@
 <template>
     <v-bottom-navigation color="primary">
       <v-btn icon block :to="{ name: 'Home' }" :class="{ 'active': isCurrentRoute('Home') }">
-        <v-icon>mdi-home</v-icon>
+        <v-icon>mdi-music</v-icon>
       </v-btn>
       <v-btn icon block :to="{ name: 'Creator' }" :class="{ 'active': isCurrentRoute('Creator') }">
-        <v-icon>mdi-account</v-icon>
+        <v-icon>mdi-gift</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </template>
@@ -46,7 +46,7 @@
   
   /* Increase icon size */
   .v-btn .v-icon {
-    font-size: 3rem;
+    font-size: 2rem;
   }
   
   </style>
