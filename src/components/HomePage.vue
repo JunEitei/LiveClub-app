@@ -27,16 +27,14 @@
             <v-row align="center">
               <v-col cols="12">
                 <v-img :src="getLiveImage(item.liveImage)" alt="Live Image" class="live-image"></v-img>
-                <v-card-title class="text-center">{{ item.liveTitle }}</v-card-title>
-                <div class="wave-divider"></div>
+                <v-card-title class="text-center" style="font-size: 2rem;">{{ item.liveTitle }}</v-card-title>                <div class="wave-divider"></div>
               </v-col>
               <v-col cols="12" md="8">
-                <v-card-text>
-                  <div class="mb-2"><strong>Description:</strong> {{ item.liveDescription }}</div>
-                  <div class="mb-2"><strong>Start Time:</strong> {{ formatDate(item.startTime) }}</div>
-                  <div class="mb-2"><strong>End Time:</strong> {{ formatDate(item.endTime) }}</div>
-                  <div class="mb-2"><strong>Location:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
-                  <!-- Link removed -->
+                <v-card-text class="live-card-text" style="margin-top: -53px;">
+                  <div class="live-card-description mb-2"><strong>説明:</strong> {{ item.liveDescription }}</div>
+                  <div class="live-card-meta mb-2"><strong>開始時間:</strong> {{ formatDate(item.startTime) }}</div>
+                  <div class="live-card-meta mb-2"><strong>終了時間:</strong> {{ formatDate(item.endTime) }}</div>
+                  <div class="live-card-meta mb-2"><strong>場所:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
                 </v-card-text>
               </v-col>
             </v-row>
@@ -67,32 +65,32 @@ export default defineComponent({
     const lives = ref<LiveEvent[]>([
       {
         id: 1,
-        liveTitle: 'Sample Live Event 1',
-        liveDescription: 'Sample description for event 1',
-        startTime: '2024-07-07T19:00:00Z',
-        endTime: '2024-07-07T21:00:00Z',
-        liveLocationName: 'Sample Venue 1',
-        liveLocationAddress: 'Sample Address 1',
+        liveTitle: 'The Singer-songwriter',
+        liveDescription: 'Rui calls friends 5',
+        startTime: '2024-06-01T12:00:00Z',
+        endTime: '2024-06-01T16:00:00Z',
+        liveLocationName: '梅田 ALWAYS',
+        liveLocationAddress: '大阪市北区野崎町6-8トレック梅田ビルビルB1F',
         liveImage: 'live1.png',
       },
       {
         id: 2,
-        liveTitle: 'Sample Live Event 2',
-        liveDescription: 'Sample description for event 2',
+        liveTitle: 'Booking Live',
+        liveDescription: 'ふみかず、YUKANIN、ほたる与作、スーキャン',
         startTime: '2024-07-08T18:30:00Z',
         endTime: '2024-07-08T20:30:00Z',
-        liveLocationName: 'Sample Venue 2',
-        liveLocationAddress: 'Sample Address 2',
+        liveLocationName: 'MUSIC 1',
+        liveLocationAddress: '豊中市庄内西町3-3-1第一サンライズビル2F',
         liveImage: 'live2.png',
       },
       {
         id: 3,
-        liveTitle: 'Sample Live Event 3',
-        liveDescription: 'Sample description for event 3',
-        startTime: '2024-07-09T18:00:00Z',
-        endTime: '2024-07-09T20:00:00Z',
-        liveLocationName: 'Sample Venue 3',
-        liveLocationAddress: 'Sample Address 3',
+        liveTitle: 'Conecting LIVE',
+        liveDescription: 'Sound Peace、YUKANIN、スーキョン、若',
+        startTime: '2024-07-06T16:00:00Z',
+        endTime: '2024-07-06T20:00:00Z',
+        liveLocationName: 'MUSIC 1',
+        liveLocationAddress: '豊中市庄内西町3-3-1第一サンライズビル2F',
         liveImage: 'live3.png',
       },
     ]);
@@ -130,36 +128,51 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+// 其他部分保持不變...
 .top-fixed-card {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: linear-gradient(to right, #ff9966, #ff5e62); /* 添加渐变背景 */
-  padding: 8px 16px; /* 调整padding来降低卡片高度 */
-  margin-bottom: 8px; /* 添加一些底部间距 */
+  background-color: #303030;
+  padding: 8px 16px;
+  margin-bottom: 8px;
 }
-
 .top-card {
-  background-color: inherit;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  background-color: #222222;
+  margin-right: -13px;
 }
-
-.top-card v-avatar {
-  border: 3px solid white;
-}
-
 .live-card {
   position: relative;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
-  margin-bottom: 8px; /* 调整卡片间距 */
-  border-radius: 0; /* 取消卡片的圆角 */
+  margin-bottom: 8px; /* 調整卡片間距 */
+  border-radius: 0; /* 取消卡片的圓角 */
 }
 
 .live-image {
   width: 100%;
-  border-bottom-left-radius: 16px; /* 保留卡片底部的圆角 */
-  border-bottom-right-radius: 16px; /* 保留卡片底部的圆角 */
+  border-bottom-left-radius: 16px; /* 保留卡片底部的圓角 */
+  border-bottom-right-radius: 16px; /* 保留卡片底部的圓角 */
+}
+
+.live-card-text {
+  padding: 16px;
+}
+
+.live-card-title {
+  font-size: 2rem; /* 加大標題字體 */
+  font-weight: bold;
+  margin-bottom: 4px; /* 減少標題與內容之間的距離 */
+  font-family: 'Pacifico', cursive; /* 使用藝術字體 */
+}
+
+.live-card-description {
+  margin-bottom: 12px; /* 調整描述和其他元信息之間的距離 */
+}
+
+.live-card-meta {
+  font-size: 0.875rem;
+  color: #666;
 }
 
 .wave-divider {
