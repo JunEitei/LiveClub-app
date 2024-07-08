@@ -3,7 +3,7 @@
     <!-- Top fixed card -->
     <v-container class="top-fixed-card">
       <v-row align="center">
-        <v-col cols="2" class="avatar-container">
+        <v-col cols="3" class="avatar-container">
           <!-- Clickable avatar image -->
           <v-avatar size="64" class="avatar" @click="openFileInput">
             <v-img :src="avatarSrc" alt="Avatar"></v-img>
@@ -11,13 +11,7 @@
           <!-- Hidden file input -->
           <input ref="fileInput" type="file" accept="image/*" style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;" @change="handleAvatarChange">
         </v-col>
-        <v-col cols="10">
-          <v-card class="top-card" tile>
-            <v-card-text>
-              <h2>Welcome back, 大毛!</h2>
-              <p>楽しんで、なくなるまで～</p>
-            </v-card-text>
-          </v-card>
+        <v-col cols="9">
         </v-col>
       </v-row>
     </v-container>
@@ -205,13 +199,9 @@ export default defineComponent({
   top: 0;
   z-index: 1000;
   background-color: #303030;
-  padding: 8px 16px;
   margin-bottom: 8px;
-}
-
-.top-card {
-  background-color: #222222;
-  margin-right: -13px;
+  left: 0;   /* 左对齐屏幕 */
+  right: 0;  /* 右对齐屏幕 */
 }
 
 .live-card {
