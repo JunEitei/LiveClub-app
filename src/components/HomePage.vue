@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <!-- Top fixed card -->
     <v-container class="top-fixed-card">
       <v-row align="center">
@@ -41,12 +41,14 @@
                   <div class="live-card-meta mb-2"><strong>場所:</strong> {{ item.liveLocationName }} - {{ item.liveLocationAddress }}</div>
                 </v-card-text>
               </v-col>
+              <v-col cols="12" md="4" class="text-right">
+              </v-col>
             </v-row>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -62,6 +64,12 @@ interface LiveEvent {
   liveLocationName: string;
   liveLocationAddress: string;
   liveImage: string;
+}
+
+interface Instrument {
+  id: number;
+  name: string;
+  icon: string;
 }
 
 export default defineComponent({
@@ -100,6 +108,13 @@ export default defineComponent({
     ]);
     const router = useRouter();
     const avatarSrc = ref<string>('/assets/avatar.png'); // 初始头像路径
+    const instruments = ref<Instrument[]>([
+      { id: 1, name: 'Drums', icon: '@/assets/drum.svg' },
+      { id: 2, name: 'Guitar', icon: '@/assets/guitar.svg' },
+      { id: 3, name: 'Bass', icon: '@/assets/bass.svg' },
+      { id: 4, name: 'Keyboard', icon: '@/assets/keyboard.svg' },
+    ]);
+    const selectedInstrument = ref<number | null>(1); // 初始选中的乐器ID
 
     const formatDate = (dateString: string) => {
       const options: Intl.DateTimeFormatOptions = {
@@ -138,22 +153,35 @@ export default defineComponent({
       fileInput.click();
     };
 
+    const selectInstrument = (instrumentId: number) => {
+      selectedInstrument.value = instrumentId;
+      // Save selected instrument to localStorage or other caching mechanism
+      localStorage.setItem('selectedInstrument', JSON.stringify(instrumentId));
+    };
+
     onMounted(() => {
-      // Load cached avatar on component mount
+      // Load cached avatar and selected instrument on component mount
       const cachedAvatar = localStorage.getItem('avatar');
+      const cachedInstrument = localStorage.getItem('selectedInstrument');
       if (cachedAvatar) {
         avatarSrc.value = cachedAvatar;
+      }
+      if (cachedInstrument) {
+        selectedInstrument.value = JSON.parse(cachedInstrument);
       }
     });
 
     return {
       lives,
       avatarSrc,
+      instruments,
+      selectedInstrument,
       formatDate,
       getLiveImage,
       navigateToCreatePage,
       openFileInput,
       handleAvatarChange,
+      selectInstrument,
     };
   },
 });
@@ -180,61 +208,69 @@ export default defineComponent({
   padding: 8px 16px;
   margin-bottom: 8px;
 }
+
 .top-card {
   background-color: #222222;
   margin-right: -13px;
 }
+
 .live-card {
   position: relative;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
-  margin-bottom: 8px; /* 調整卡片間距 */
-  border-radius: 0; /* 取消卡片的圓角 */
-}
-
-.live-image {
+  margin-bottom: 16px;
+  background-color: #222222;
+  }
+  
+  .live-image {
   width: 100%;
-  border-bottom-left-radius: 16px; /* 保留卡片底部的圓角 */
-  border-bottom-right-radius: 16px; /* 保留卡片底部的圓角 */
-}
-
-.live-card-text {
+  height: auto;
+  border-radius: 4px 4px 0 0;
+  }
+  
+  .live-card-text {
+  color: #ffffff;
   padding: 16px;
-}
-
-.live-card-title {
-  font-size: 2rem; /* 加大標題字體 */
-  font-weight: bold;
-  margin-bottom: 4px; /* 減少標題與內容之間的距離 */
-  font-family: 'Pacifico', cursive; /* 使用藝術字體 */
-}
-
-.live-card-description {
-  margin-bottom: 12px; /* 調整描述和其他元信息之間的距離 */
-}
-
-.live-card-meta {
+  }
+  
+  .live-card-description {
+  font-size: 1rem;
+  }
+  
+  .live-card-meta {
   font-size: 0.875rem;
-  color: #666;
-}
-
-.wave-divider {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background-image: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0) 100%
+  }
+  
+  .position-card {
+  background-color: #222222;
+  padding: 16px;
+  border-radius: 8px;
+  }
+  
+  .position-title {
+  color: #ffffff;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  }
+  
+  .instrument-button {
+  padding: 8px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  }
+  
+  .instrument-button.selected {
+  background-color: #33b5e5;
+  border-radius: 50%;
+  }
+  
+  .wave-divider {
+  height: 1px;
+  background: linear-gradient(
+  to right,
+  rgba(255, 255, 255, 0) 0%,
+  rgba(255, 255, 255, 0.8) 50%,
+  rgba(255, 255, 255, 0) 100%
   );
-  transform: translateY(50%);
-}
-
-.text-center {
-  margin-bottom: 12px;
-  font-weight: bold;
-}
+  margin: 16px 0;
+  }
 </style>
