@@ -5,12 +5,19 @@
       <v-form @submit.prevent="createLiveEvent" class="form-container">
         <div class="upload-container">
           <v-img
-            v-if="!userPhoto && photoPreview"
+            v-if="photoPreview && !userPhoto"
             :src="photoPreview"
             alt="Photo Preview"
             max-width="300"
             class="my-4"
             @click.stop="openFilePicker"
+          ></v-img>
+          <v-img
+            v-if="userPhoto"
+            :src="photoPreview"
+            alt="Uploaded Photo"
+            max-width="300"
+            class="my-4"
           ></v-img>
           <input
             ref="fileInput"
@@ -20,7 +27,7 @@
             style="position: absolute; top: 0; left: 0; opacity: 0; width: 100%; height: 100%;"
             @change="onFileSelected"
           />
-          <div class="upload-overlay" v-if="!userPhoto">
+          <div class="upload-overlay" v-if="!userPhoto && !photoPreview">
             <v-icon class="upload-icon">mdi-camera</v-icon>
             <div class="upload-text">押して君の写真をアップロード</div>
           </div>
@@ -30,13 +37,6 @@
             @click.stop="openFilePicker"
           ></button>
         </div>
-        <v-img
-          v-if="userPhoto && photoPreview"
-          :src="photoPreview"
-          alt="Photo Preview"
-          max-width="300"
-          class="my-4"
-        ></v-img>
       </v-form>
     </v-card>
 
@@ -92,13 +92,13 @@
     <v-card class="submit-card">
       <v-card-text>
         <v-btn
-        @click="createLiveEvent"
+          @click="createLiveEvent"
           type="submit"
           :style="{ background: buttonBackground, color: 'white' }"
           class="gradient-button"
           block
         >
-        ライブを開始する
+          ライブを開始する
         </v-btn>
       </v-card-text>
     </v-card>
@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -161,6 +161,13 @@ export default defineComponent({
 
     // Create live event
     const createLiveEvent = async () => {
+      // Save data to local storage
+      if (photoPreview.value) {
+        localStorage.setItem('photoPreview', photoPreview.value);
+      }
+      if (selectedPosition.value) {
+        localStorage.setItem('selectedPosition', selectedPosition.value);
+      }
       router.push('/');
     };
 
@@ -179,19 +186,21 @@ export default defineComponent({
         const selectedFile = target.files[0];
         userPhoto.value = selectedFile;
         previewPhoto(selectedFile);
-        const uploadContainer = document.querySelector('.upload-container');
+        const uploadContainer = document.querySelector('.upload-container') as HTMLElement;
         if (uploadContainer) {
           uploadContainer.style.display = 'none';
         }
       }
     };
 
-    
     // Preview photo
     const previewPhoto = (file: File) => {
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        photoPreview.value = e.target?.result as string;
+        const result = e.target?.result as string;
+        photoPreview.value = result;
+        // Save the base64 string to localStorage
+        localStorage.setItem('photoPreview', result);
       };
       reader.readAsDataURL(file);
     };
@@ -200,6 +209,18 @@ export default defineComponent({
     const translate = () => {
       console.log('Language changed to:', selectedLanguage.value);
     };
+
+    // Load data from local storage on mount
+    onMounted(() => {
+      const savedPhotoPreview = localStorage.getItem('photoPreview');
+      if (savedPhotoPreview) {
+        photoPreview.value = savedPhotoPreview;
+      }
+      const savedPosition = localStorage.getItem('selectedPosition');
+      if (savedPosition) {
+        selectedPosition.value = savedPosition;
+      }
+    });
 
     return {
       userPhoto,
@@ -286,53 +307,47 @@ export default defineComponent({
 
 .invisible-button {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
   cursor: pointer;
-}
-
-.language-select {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 120px; /* 固定宽度 */
-  z-index: 999; /* 提高层级 */
-}
-
-.position-card {
-  margin-top: 20px;
-  height: 306px;
-  padding: 20px;
-  background-color: #444444; /* 深灰色背景 */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.submit-card {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #555555; /* 深灰色背景 */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.custom-radio input[type="radio"]:checked + .v-item--active .v-item__content {
-  background-color: #FFA500; /* 设置选中时的背景色为橙色 */
-}
-
-.v-card-title {
-  margin-top: -13px; /* 将标题往上移动 10px */
-  font-weight: bold;
-  font-size: 19px;
-}
-
-
-@media (max-width: 600px) {
-  .v-container {
-    padding: 20px 10px; /* 手機瀏覽時的左右內邊距 */
   }
-}
+  
+  .custom-radio {
+  font-size: 20px; /* 调整按钮大小 */
+  cursor: pointer;
+  }
+  
+  .position-card {
+  background-color: #333333; /* 深灰色背景 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  }
+  
+  .submit-card {
+  background-color: #333333; /* 深灰色背景 */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  padding-bottom: 20px;
+  }
+  
+  .language-select {
+  max-width: 120px;
+  font-size: 16px;
+  }
+  
+  .card-title {
+  color: #fff; /* 文字顏色設置為白色 */
+  }
+  
+  .v-btn.block {
+  display: block;
+  width: 100%;
+  }
+  
+  .v-btn .v-btn__content {
+  text-align: center;
+  }
 </style>

@@ -1,12 +1,15 @@
 <template>
   <div>
     <!-- Top fixed card -->
-    <v-container class="top-fixed-card" @click="navigateToCreatePage">
+    <v-container class="top-fixed-card">
       <v-row align="center">
-        <v-col cols="2">
-          <v-avatar size="64">
-            <v-img src="/assets/avatar.png" alt="Avatar"></v-img>
+        <v-col cols="2" class="avatar-container">
+          <!-- Clickable avatar image -->
+          <v-avatar size="64" class="avatar" @click="openFileInput">
+            <v-img :src="avatarSrc" alt="Avatar"></v-img>
           </v-avatar>
+          <!-- Hidden file input -->
+          <input ref="fileInput" type="file" accept="image/*" style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;" @change="handleAvatarChange">
         </v-col>
         <v-col cols="10">
           <v-card class="top-card" tile>
@@ -27,10 +30,11 @@
             <v-row align="center">
               <v-col cols="12">
                 <v-img :src="getLiveImage(item.liveImage)" alt="Live Image" class="live-image"></v-img>
-                <v-card-title class="text-center" style="font-size: 2rem;">{{ item.liveTitle }}</v-card-title>                <div class="wave-divider"></div>
+                <v-card-title class="text-center" style="font-size: 2rem;">{{ item.liveTitle }}</v-card-title>
+                <div class="wave-divider"></div>
               </v-col>
               <v-col cols="12" md="8">
-                <v-card-text class="live-card-text" style="margin-top: -53px;">
+                <v-card-text class="live-card-text">
                   <div class="live-card-description mb-2"><strong>説明:</strong> {{ item.liveDescription }}</div>
                   <div class="live-card-meta mb-2"><strong>開始時間:</strong> {{ formatDate(item.startTime) }}</div>
                   <div class="live-card-meta mb-2"><strong>終了時間:</strong> {{ formatDate(item.endTime) }}</div>
@@ -95,6 +99,7 @@ export default defineComponent({
       },
     ]);
     const router = useRouter();
+    const avatarSrc = ref<string>('/assets/avatar.png'); // 初始头像路径
 
     const formatDate = (dateString: string) => {
       const options: Intl.DateTimeFormatOptions = {
@@ -113,22 +118,60 @@ export default defineComponent({
       router.push('/create');
     };
 
+    const handleAvatarChange = (event: Event) => {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (typeof e.target?.result === 'string') {
+            avatarSrc.value = e.target.result;
+            // Save to localStorage or other caching mechanism
+            localStorage.setItem('avatar', avatarSrc.value);
+          }
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    };
+
+    const openFileInput = () => {
+      const fileInput = (this.$refs.fileInput as HTMLInputElement);
+      fileInput.click();
+    };
+
     onMounted(() => {
-      // Fetch live events if needed
+      // Load cached avatar on component mount
+      const cachedAvatar = localStorage.getItem('avatar');
+      if (cachedAvatar) {
+        avatarSrc.value = cachedAvatar;
+      }
     });
 
     return {
       lives,
+      avatarSrc,
       formatDate,
       getLiveImage,
       navigateToCreatePage,
+      openFileInput,
+      handleAvatarChange,
     };
   },
 });
 </script>
 
 <style scoped lang="scss">
-// 其他部分保持不變...
+.avatar-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar {
+  cursor: pointer;
+  position: relative;
+}
+
 .top-fixed-card {
   position: sticky;
   top: 0;
