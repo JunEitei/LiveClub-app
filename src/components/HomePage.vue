@@ -35,8 +35,13 @@
           <v-row align="center">
             <v-col cols="12">
               <v-img :src="getLiveImage(item.liveImage)" alt="Live Image" class="live-image"></v-img>
-              <v-card-title class="text-center" style="font-size: p2rem;">{{ item.liveTitle }}</v-card-title>
+              <v-card-title class="text-center" style="font-size: 1.2rem;">{{ item.liveTitle }}</v-card-title>
               <div class="wave-divider"></div>
+              <v-row align="center" justify="center">
+                <v-col cols="12" class="text-center">
+                  <div class="live-card-price"><strong>{{ item.price }}</strong></div>
+                </v-col>
+              </v-row>
             </v-col>
             <v-col cols="12" md="8">
               <v-card-text class="live-card-text">
@@ -77,6 +82,7 @@ interface LiveEvent {
   liveLocationName: string;
   liveLocationAddress: string;
   liveImage: string;
+  price: string;
 }
 
 interface Instrument {
@@ -113,6 +119,7 @@ export default defineComponent({
         liveLocationName: '梅田 ALWAYS',
         liveLocationAddress: '大阪市北区野崎町6-8トレック梅田ビルビルB1F',
         liveImage: 'live1.png',
+        price: '1,700円'
       },
       {
         id: 2,
@@ -123,6 +130,7 @@ export default defineComponent({
         liveLocationName: 'MUSIC 1',
         liveLocationAddress: '豊中市庄内西町3-3-1第一サンライズビル2F',
         liveImage: 'live2.png',
+        price: '2,700円'
       },
       {
         id: 3,
@@ -133,6 +141,7 @@ export default defineComponent({
         liveLocationName: 'MUSIC 1',
         liveLocationAddress: '豊中市庄内西町3-3-1第一サンライズビル2F',
         liveImage: 'live3.png',
+        price: '2,000円'
       },
     ]);
     const router = useRouter();
@@ -294,6 +303,13 @@ export default defineComponent({
 
 .live-card-meta {
   font-size: 0.875rem;
+}
+
+.live-card-price {
+  font-size: 1.975rem;
+  font-weight: lighter;
+  color: orange;
+  margin-top: 1px;
 }
 
 .position-card {
