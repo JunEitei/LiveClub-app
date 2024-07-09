@@ -224,6 +224,7 @@ export default defineComponent({
 }
 
 .avatar {
+  margin-left: 13px;
   cursor: pointer;
   position: relative;
 }
