@@ -27,8 +27,8 @@
             @click:close="data.parent.selectItem(data.item)"
           >
             <template v-slot:prepend>
-              <v-avatar class="bg-accent text-uppercase" start>
-                <v-img :src="getInstrumentIcon(data.item.title)" alt="Icon"></v-img>
+              <v-avatar class="bg-accent text-uppercase instrument-avatar" start>
+                <v-img :src="getInstrumentIcon(data.item.title)" class="instrument-icon" alt="Icon"></v-img>
               </v-avatar>
             </template>
             {{ data.item.title }}
@@ -75,6 +75,7 @@ import drumIcon from '@/assets/drum.svg';
 import keyboardIcon from '@/assets/keyboard.svg';
 import guitarIcon from '@/assets/guitar.svg';
 import percussionIcon from '@/assets/percussion.svg';
+import bassIcon from '@/assets/bass.svg';
 
 interface LiveEvent {
   id: number;
@@ -96,7 +97,7 @@ interface Instrument {
 export default defineComponent({
   setup() {
     const selectedInstruments = ref<string[]>([]);
-    const instruments = ref<string[]>(['ドラム', 'キーボード', 'ギター', 'パーカッション']);
+    const instruments = ref<string[]>(['ドラム', 'キーボード', 'ギター', 'パーカッション', 'ベース']);
 
     const lives = ref<LiveEvent[]>([
       {
@@ -152,6 +153,7 @@ export default defineComponent({
         'キーボード': keyboardIcon,
         'ギター': guitarIcon,
         'パーカッション': percussionIcon,
+        'ベース': bassIcon,
       };
       return instrumentIcons[instrument] || '';
     };
@@ -233,6 +235,21 @@ export default defineComponent({
   height: 100%; /* 确保 v-col 撑开整个高度 */
   margin-top: 15px;
 }
+.instrument-avatar {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  height: 100%; /* 设置高度以便垂直居中 */
+}
+
+.instrument-icon {
+  width: auto; /* 自动调整宽度 */
+  height: auto; /* 自动调整高度 */
+  max-width: 100%; /* 最大宽度100%保持比例 */
+  max-height: 100%; /* 最大高度100%保持比例 */
+  object-fit: contain; /* 保持图标比例 */
+  margin-top: -2px;
+} 
 
 /* 覆盖 Vuetify 的样式，使得 v-combobox 在垂直居中和保持在行的中间 */
 .v-combobox {
