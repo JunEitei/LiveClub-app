@@ -224,7 +224,7 @@ export default defineComponent({
   top: 0;
   z-index: 1000;
   margin-bottom: 8px;
-  background: linear-gradient(to right, #FFA500, #FF69B4); /* Orange to Pink gradient */
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)); 
 }
 .centered-column {
   display: flex;

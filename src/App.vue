@@ -7,10 +7,15 @@
 </template>
 
 <style>
+:root {
+  --gradient-start: #C94640;
+  --gradient-end: #EF8B3A;
+}
+
 .v-menu > .v-overlay__content > .v-card,
 .v-menu > .v-overlay__content > .v-sheet,
 .v-menu > .v-overlay__content > .v-list {
-  background: linear-gradient(to right, #FFA500, #FF69B4); /* Orange to Pink gradient */
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)); 
   border-radius: inherit;
   overflow: auto;
   height: 100%;
