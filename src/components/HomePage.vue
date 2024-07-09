@@ -20,12 +20,8 @@
         <template v-slot:selection="data">
           <v-chip
             :key="JSON.stringify(data.item)"
-            v-bind="data.attrs"
-            :disabled="data.disabled"
-            :model-value="data.selected"
             size="small"
-            @click:close="data.parent.selectItem(data.item)"
-          >
+            >
             <template v-slot:prepend>
               <v-avatar class="bg-accent text-uppercase instrument-avatar" start>
                 <v-img :src="getInstrumentIcon(data.item.title)" class="instrument-icon" alt="Icon"></v-img>
@@ -97,6 +93,12 @@ export default defineComponent({
   setup() {
     const selectedInstruments = ref<string[]>([]);
     const instruments = ref<string[]>(['ギター', 'キーボード', 'ベース', 'ドラム', 'パーカッション']);
+    const fileInput = ref<HTMLInputElement | null>(null); 
+
+    watch(selectedInstruments, (newValue, oldValue) => {
+  console.log('selectedInstruments changed:', newValue);
+  // 在这里可以处理 selectedInstruments 变化后的逻辑
+});
 
     const lives = ref<LiveEvent[]>([
       {
@@ -144,6 +146,8 @@ export default defineComponent({
       return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
+    
+
     const getLiveImage = (imageName: string) => `/assets/${imageName}`;
 
     const getInstrumentIcon = (instrument: string) => {
@@ -177,8 +181,9 @@ export default defineComponent({
     };
 
     const openFileInput = () => {
-      const fileInput = (this.$refs.fileInput as HTMLInputElement);
-      fileInput.click();
+      if (fileInput.value) {
+        fileInput.value.click(); // Accessing the file input using .value
+      }
     };
 
 
@@ -200,7 +205,7 @@ export default defineComponent({
       getLiveImage,
       navigateToCreatePage,
       openFileInput,
-      handleAvatarChange,
+      handleAvatarChange
     };
   },
 });
