@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-container class="top-fixed-card">
       <v-row align="center">
         <v-col cols="3" class="avatar-container">
@@ -64,7 +63,6 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-container>
 </template>
 
 <script lang="ts">
@@ -97,7 +95,7 @@ interface Instrument {
 export default defineComponent({
   setup() {
     const selectedInstruments = ref<string[]>([]);
-    const instruments = ref<string[]>(['ドラム', 'キーボード', 'ギター', 'パーカッション', 'ベース']);
+    const instruments = ref<string[]>(['ギター', 'キーボード', 'ベース', 'ドラム', 'パーカッション']);
 
     const lives = ref<LiveEvent[]>([
       {
@@ -224,10 +222,8 @@ export default defineComponent({
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #303030;
   margin-bottom: 8px;
-  left: 0;   /* 左对齐屏幕 */
-  right: 0;  /* 右对齐屏幕 */
+  background: linear-gradient(to right, #FFA500, #FF69B4); /* Orange to Pink gradient */
 }
 .centered-column {
   display: flex;
