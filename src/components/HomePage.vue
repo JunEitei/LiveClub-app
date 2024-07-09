@@ -17,23 +17,23 @@
           label="弾かんといてんの？"
           multiple
         >
-          <template v-slot:selection="data">
-            <v-chip
-              :key="JSON.stringify(data.item)"
-              v-bind="data.attrs"
-              :disabled="data.disabled"
-              :model-value="data.selected"
-              size="small"
-              @click:close="data.parent.selectItem(data.item)"
-            >
-              <template v-slot:prepend>
-                <v-avatar class="bg-accent text-uppercase" start
-                  >{{ data.item.title.slice(0, 1) }}</v-avatar
-                >
-              </template>
-              {{ data.item.title }}
-            </v-chip>
-          </template>
+        <template v-slot:selection="data">
+          <v-chip
+            :key="JSON.stringify(data.item)"
+            v-bind="data.attrs"
+            :disabled="data.disabled"
+            :model-value="data.selected"
+            size="small"
+            @click:close="data.parent.selectItem(data.item)"
+          >
+            <template v-slot:prepend>
+              <v-avatar class="bg-accent text-uppercase" start>
+                <v-img :src="getInstrumentIcon(data.item.title)" alt="Icon"></v-img>
+              </v-avatar>
+            </template>
+            {{ data.item.title }}
+          </v-chip>
+        </template>
         </v-combobox>
         </v-col>
       </v-row>
@@ -46,7 +46,7 @@
             <v-row align="center">
               <v-col cols="12">
                 <v-img :src="getLiveImage(item.liveImage)" alt="Live Image" class="live-image"></v-img>
-                <v-card-title class="text-center" style="font-size: 2rem;">{{ item.liveTitle }}</v-card-title>
+                <v-card-title class="text-center" style="font-size: p2rem;">{{ item.liveTitle }}</v-card-title>
                 <div class="wave-divider"></div>
               </v-col>
               <v-col cols="12" md="8">
@@ -70,6 +70,11 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+// Import the icons
+import drumIcon from '@/assets/drum.svg';
+import keyboardIcon from '@/assets/keyboard.svg';
+import guitarIcon from '@/assets/guitar.svg';
+import percussionIcon from '@/assets/percussion.svg';
 
 interface LiveEvent {
   id: number;
@@ -91,8 +96,8 @@ interface Instrument {
 export default defineComponent({
   setup() {
     const selectedInstruments = ref<string[]>([]);
-    const instruments = ref<string[]>(['Drum', 'Keyboard', 'guitar', 'percussion']);
-      
+    const instruments = ref<string[]>(['ドラム', 'キーボード', 'ギター', 'パーカッション']);
+
     const lives = ref<LiveEvent[]>([
       {
         id: 1,
@@ -141,6 +146,16 @@ export default defineComponent({
 
     const getLiveImage = (imageName: string) => `/assets/${imageName}`;
 
+    const getInstrumentIcon = (instrument: string) => {
+      const instrumentIcons: { [key: string]: string } = {
+        'ドラム': drumIcon,
+        'キーボード': keyboardIcon,
+        'ギター': guitarIcon,
+        'パーカッション': percussionIcon,
+      };
+      return instrumentIcons[instrument] || '';
+    };
+
     const navigateToCreatePage = () => {
       router.push('/create');
     };
@@ -179,6 +194,7 @@ export default defineComponent({
       avatarSrc,
       instruments,
       selectedInstruments,
+      getInstrumentIcon,
       formatDate,
       getLiveImage,
       navigateToCreatePage,
