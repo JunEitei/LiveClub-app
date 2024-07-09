@@ -15,6 +15,7 @@
           :items="instruments"
           label="弾かんといてんの？"
           multiple
+          class="gradient-combobox"
         >
         <template v-slot:selection="data">
           <v-chip
@@ -288,7 +289,6 @@ export default defineComponent({
   font-size: 1.25rem;
   margin-bottom: 8px;
   }
-  
   
   .wave-divider {
   height: 1px;
