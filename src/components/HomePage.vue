@@ -1,21 +1,43 @@
 <template>
   <v-container>
-    <!-- Top fixed card -->
     <v-container class="top-fixed-card">
       <v-row align="center">
         <v-col cols="3" class="avatar-container">
-          <!-- Clickable avatar image -->
+          <!-- 可點擊的頭像圖片 -->
           <v-avatar size="64" class="avatar" @click="openFileInput">
             <v-img :src="avatarSrc" alt="Avatar"></v-img>
           </v-avatar>
-          <!-- Hidden file input -->
+          <!-- 隱藏的檔案輸入 -->
           <input ref="fileInput" type="file" accept="image/*" style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;" @change="handleAvatarChange">
         </v-col>
-        <v-col cols="9">
+        <v-col cols="9" class="centered-column">
+          <v-combobox
+          v-model="selectedInstruments"
+          :items="instruments"
+          label="弾かんといてんの？"
+          multiple
+        >
+          <template v-slot:selection="data">
+            <v-chip
+              :key="JSON.stringify(data.item)"
+              v-bind="data.attrs"
+              :disabled="data.disabled"
+              :model-value="data.selected"
+              size="small"
+              @click:close="data.parent.selectItem(data.item)"
+            >
+              <template v-slot:prepend>
+                <v-avatar class="bg-accent text-uppercase" start
+                  >{{ data.item.title.slice(0, 1) }}</v-avatar
+                >
+              </template>
+              {{ data.item.title }}
+            </v-chip>
+          </template>
+        </v-combobox>
         </v-col>
       </v-row>
     </v-container>
-
     <!-- Existing live event cards -->
     <v-container>
       <v-row>
@@ -68,6 +90,9 @@ interface Instrument {
 
 export default defineComponent({
   setup() {
+    const selectedInstruments = ref<string[]>([]);
+    const instruments = ref<string[]>(['Drum', 'Keyboard', 'guitar', 'percussion']);
+      
     const lives = ref<LiveEvent[]>([
       {
         id: 1,
@@ -102,13 +127,6 @@ export default defineComponent({
     ]);
     const router = useRouter();
     const avatarSrc = ref<string>('/assets/avatar.png'); // 初始头像路径
-    const instruments = ref<Instrument[]>([
-      { id: 1, name: 'Drums', icon: '@/assets/drum.svg' },
-      { id: 2, name: 'Guitar', icon: '@/assets/guitar.svg' },
-      { id: 3, name: 'Bass', icon: '@/assets/bass.svg' },
-      { id: 4, name: 'Keyboard', icon: '@/assets/keyboard.svg' },
-    ]);
-    const selectedInstrument = ref<number | null>(1); // 初始选中的乐器ID
 
     const formatDate = (dateString: string) => {
       const options: Intl.DateTimeFormatOptions = {
@@ -147,21 +165,12 @@ export default defineComponent({
       fileInput.click();
     };
 
-    const selectInstrument = (instrumentId: number) => {
-      selectedInstrument.value = instrumentId;
-      // Save selected instrument to localStorage or other caching mechanism
-      localStorage.setItem('selectedInstrument', JSON.stringify(instrumentId));
-    };
 
     onMounted(() => {
       // Load cached avatar and selected instrument on component mount
       const cachedAvatar = localStorage.getItem('avatar');
-      const cachedInstrument = localStorage.getItem('selectedInstrument');
       if (cachedAvatar) {
         avatarSrc.value = cachedAvatar;
-      }
-      if (cachedInstrument) {
-        selectedInstrument.value = JSON.parse(cachedInstrument);
       }
     });
 
@@ -169,13 +178,12 @@ export default defineComponent({
       lives,
       avatarSrc,
       instruments,
-      selectedInstrument,
+      selectedInstruments,
       formatDate,
       getLiveImage,
       navigateToCreatePage,
       openFileInput,
       handleAvatarChange,
-      selectInstrument,
     };
   },
 });
@@ -203,7 +211,18 @@ export default defineComponent({
   left: 0;   /* 左对齐屏幕 */
   right: 0;  /* 右对齐屏幕 */
 }
+.centered-column {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  height: 100%; /* 确保 v-col 撑开整个高度 */
+  margin-top: 15px;
+}
 
+/* 覆盖 Vuetify 的样式，使得 v-combobox 在垂直居中和保持在行的中间 */
+.v-combobox {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .live-card {
   position: relative;
   margin-bottom: 16px;
@@ -241,17 +260,6 @@ export default defineComponent({
   margin-bottom: 8px;
   }
   
-  .instrument-button {
-  padding: 8px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  }
-  
-  .instrument-button.selected {
-  background-color: #33b5e5;
-  border-radius: 50%;
-  }
   
   .wave-divider {
   height: 1px;
