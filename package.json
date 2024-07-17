@@ -13,6 +13,7 @@
     "core-js": "^3.34.0",
     "roboto-fontface": "*",
     "vue": "^3.4.21",
+    "vue-color": "^2.8.1",
     "vuetify": "^3.5.8"
   },
   "devDependencies": {
