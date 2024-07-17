@@ -1,5 +1,5 @@
 <template>
-  <v-card class="top-fixed-card">
+  <v-card class="bottom-fixed-card">
     <v-row align="center">
       <v-col cols="3" class="avatar-container">
         <!-- 可點擊的頭像圖片 -->
@@ -12,7 +12,7 @@
           @change="handleAvatarChange">
       </v-col>
       <v-col cols="9" class="centered-column">
-        <v-combobox v-model="selectedInstrument" :items="instruments" label="弾かんといてんの？" style="margin-right: 13px;">
+        <v-combobox v-model="selectedInstrument" :items="instruments" label="弾かんといてんの？" >
           <template v-slot:selection="data">
             <v-chip v-if="data.item.title && selectedInstrument !== ''" :key="JSON.stringify(data.item)" size="small">
               <template v-slot:prepend>
@@ -238,12 +238,15 @@ export default defineComponent({
   position: relative;
 }
 
-.top-fixed-card {
-  position: sticky;
-  top: 0;
+.bottom-fixed-card {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   z-index: 1000;
   background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-}
+  padding: 10px;
+  }
 
 .centered-column {
   display: flex;
