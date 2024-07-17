@@ -1,33 +1,4 @@
 <template>
-  <v-card class="bottom-fixed-card">
-    <v-row align="center">
-      <v-col cols="3" class="avatar-container">
-        <!-- 可點擊的頭像圖片 -->
-        <v-avatar size="64" class="avatar" @click="openFileInput">
-          <v-img :src="avatarSrc" alt="Avatar"></v-img>
-        </v-avatar>
-        <!-- 隱藏的檔案輸入 -->
-        <input ref="fileInput" type="file" accept="image/*"
-          style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;"
-          @change="handleAvatarChange">
-      </v-col>
-      <v-col cols="9" class="centered-column">
-        <v-combobox v-model="selectedInstrument" :items="instruments" label="弾かんといてんの？" >
-          <template v-slot:selection="data">
-            <v-chip v-if="data.item.title && selectedInstrument !== ''" :key="JSON.stringify(data.item)" size="small">
-              <template v-slot:prepend>
-                <v-avatar class="bg-accent text-uppercase instrument-avatar" start>
-                  <v-img :src="getInstrumentIcon(data.item.title)" class="instrument-icon" alt="Icon"></v-img>
-                </v-avatar>
-              </template>
-              <span class="chip-title">{{ data.item.title }}</span>
-            </v-chip>
-          </template>
-        </v-combobox>
-      </v-col>
-    </v-row>
-  </v-card>
-  <!-- Existing live event cards -->
   <v-container>
     <v-row>
       <v-col cols="12" v-for="(item) in lives" :key="item.id">
@@ -59,6 +30,35 @@
       </v-col>
     </v-row>
   </v-container>
+
+  <v-card class="bottom-fixed-card">
+    <v-row align="center">
+      <v-col cols="3" class="avatar-container">
+        <!-- 可點擊的頭像圖片 -->
+        <v-avatar size="64" class="avatar" @click="openFileInput">
+          <v-img :src="avatarSrc" alt="Avatar"></v-img>
+        </v-avatar>
+        <!-- 隱藏的檔案輸入 -->
+        <input ref="fileInput" type="file" accept="image/*"
+          style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer;"
+          @change="handleAvatarChange">
+      </v-col>
+      <v-col cols="9" class="centered-column">
+        <v-combobox v-model="selectedInstrument" :items="instruments" label="弾かんといてんの？" >
+          <template v-slot:selection="data">
+            <v-chip v-if="data.item.title && selectedInstrument !== ''" :key="JSON.stringify(data.item)" size="small">
+              <template v-slot:prepend>
+                <v-avatar class="bg-accent text-uppercase instrument-avatar" start>
+                  <v-img :src="getInstrumentIcon(data.item.title)" class="instrument-icon" alt="Icon"></v-img>
+                </v-avatar>
+              </template>
+              <span class="chip-title">{{ data.item.title }}</span>
+            </v-chip>
+          </template>
+        </v-combobox>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -238,16 +238,6 @@ export default defineComponent({
   position: relative;
 }
 
-.bottom-fixed-card {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
-  padding: 10px;
-  }
-
 .centered-column {
   display: flex;
   margin-top: 19px;
@@ -283,12 +273,25 @@ export default defineComponent({
   margin-bottom: auto;
 }
 
+.bottom-fixed-card {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+  padding: 10px;
+}
+
 .live-card {
-  position: relative;
   margin-bottom: 16px;
   background-color: #222222;
 }
 
+/* Add padding-bottom to avoid overlapping with bottom-fixed-card */
+.v-container {
+  padding-bottom: 100px; /* Adjust the padding as needed */
+}
 .live-image {
   width: 100%;
   height: auto;
