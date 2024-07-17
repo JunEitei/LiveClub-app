@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" v-for="(item) in lives" :key="item.id">
-        <v-card class="live-card">
+        <v-card class="live-card" @click="goAlive(item.id)">
           <v-row align="center">
             <v-col cols="12">
               <v-img :src="getLiveImage(item.liveImage)" alt="Live Image" class="live-image"></v-img>
@@ -65,7 +65,6 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 // Import the icons
-import relaxIcon from '@/assets/relax.svg';
 import drumIcon from '@/assets/drum.svg';
 import keyboardIcon from '@/assets/keyboard.svg';
 import guitarIcon from '@/assets/guitar.svg';
@@ -112,14 +111,14 @@ export default defineComponent({
     const lives = ref<LiveEvent[]>([
       {
         id: 1,
-        liveTitle: 'The Singer-songwriter',
-        liveDescription: 'Rui calls friends 5',
+        liveTitle: 'HAMASODACHI',
+        liveDescription: 'GT田村太一 VD優花',
         startTime: '2024-06-01T12:00:00Z',
         endTime: '2024-06-01T16:00:00Z',
         liveLocationName: '梅田 ALWAYS',
-        liveLocationAddress: '大阪市北区野崎町6-8トレック梅田ビルビルB1F',
+        liveLocationAddress: '大阪市中央区谷町5-7-3タニマチビル9階YUKA JAZZ LIVE BAR グラバー邸',
         liveImage: 'live1.png',
-        price: '1,700円'
+        price: '2,000円'
       },
       {
         id: 2,
@@ -158,7 +157,10 @@ export default defineComponent({
       return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
-
+    // 發起一個Live
+    const goAlive = (liveId: number) => {
+      router.push({ name: 'Live', params: { id: liveId } });
+    };
 
     const getLiveImage = (imageName: string) => `/assets/${imageName}`;
 
@@ -213,7 +215,8 @@ export default defineComponent({
       formatDate,
       getLiveImage,
       openFileInput,
-      handleAvatarChange
+      handleAvatarChange,
+      goAlive
     };
   },
 });
