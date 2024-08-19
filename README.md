@@ -1,1 +1,1 @@
-# LiveClub的Web端
+# LiveClubのWeb APP
